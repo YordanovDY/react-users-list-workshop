@@ -5,9 +5,11 @@ import userService from "../services/userService";
 import Pagination from "./Pagination";
 import Search from "./Search";
 import UserListItem from "./UserListItem";
+import UserSave from "./UserSave";
 
 export default function UserList() {
     const [users, setUsers] = useState([]);
+    const [showCreateForm, setShowCreateForm] = useState(false);
 
     useEffect(() => {
         userService.getUsers()
@@ -16,9 +18,20 @@ export default function UserList() {
             })
     }, []);
 
+    const showAddUserFormHandler = () => {
+        setShowCreateForm(true);
+    }
+
+    const hideAddUserFormHandler = () => {
+        setShowCreateForm(false);
+    }
+
     return (
         <>
             <Search />
+
+            {showCreateForm && <UserSave onClose={hideAddUserFormHandler} />}
+
 
             {/* <!-- Table component --> */}
             <div className="table-wrapper">
@@ -155,7 +168,7 @@ export default function UserList() {
             </div >
 
             {/* <!-- New user button  --> */}
-            < button className="btn-add btn" > Add new user</button >
+            < button onClick={showAddUserFormHandler} className="btn-add btn" > Add new user</button >
 
             <Pagination />
         </>
