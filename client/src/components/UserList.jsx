@@ -7,11 +7,13 @@ import Search from "./Search";
 import UserListItem from "./UserListItem";
 import UserSave from "./UserSave";
 import UserInfo from "./UserInfo";
+import UserDelete from "./UserDelete";
 
 export default function UserList() {
     const [users, setUsers] = useState([]);
     const [showCreateForm, setShowCreateForm] = useState(false);
     const [chosenUserIdInfo, setchosenUserIdInfo] = useState(null);
+    const [chosenUserIdDeletion, setchosenUserIdDeletion] = useState(null);
 
     useEffect(() => {
         userService.getUsers()
@@ -48,6 +50,20 @@ export default function UserList() {
         setchosenUserIdInfo(null);
     }
 
+    const showDeleteModalHandler = (userId) => {
+        setchosenUserIdDeletion(userId);
+    }
+
+    const hideDeleteModalHandler = () => {
+        setchosenUserIdDeletion(null);
+    }
+
+    const deleteUserHandler = async () => {
+        await userService.deleteUser(chosenUserIdDeletion);
+        setUsers(users => users.filter(user => user._id !== chosenUserIdDeletion));
+        setchosenUserIdDeletion(null);
+    }
+
     return (
         <>
             <Search />
@@ -61,6 +77,11 @@ export default function UserList() {
             {chosenUserIdInfo && <UserInfo
                 userId={chosenUserIdInfo}
                 onInfoClose={hideUserInfoHandler}
+            />}
+
+            {chosenUserIdDeletion && <UserDelete
+                onClose={hideDeleteModalHandler}
+                onDelete={deleteUserHandler}
             />}
 
 
@@ -196,6 +217,7 @@ export default function UserList() {
                             <UserListItem
                                 key={user._id}
                                 onInfoClick={showUserInfoHandler}
+                                onDeleteClick={showDeleteModalHandler}
                                 {...user}
                             />)}
 

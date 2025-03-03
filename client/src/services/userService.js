@@ -4,6 +4,7 @@ const userService = {
     getUsers,
     getSingleUser,
     addUser,
+    deleteUser,
 }
 
 async function getUsers() {
@@ -55,6 +56,16 @@ async function getSingleUser(userId) {
     const response = await fetch(baseUrl + `/${userId}`);
     const user = await response.json();
     return user;
+}
+
+async function deleteUser(userId) {
+    const response = await fetch(baseUrl + `/${userId}`, {
+        method: 'DELETE'
+    });
+
+    const result = await response.json();
+
+    return result;
 }
 
 export default userService;
