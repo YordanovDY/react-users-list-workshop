@@ -6,10 +6,12 @@ import Pagination from "./Pagination";
 import Search from "./Search";
 import UserListItem from "./UserListItem";
 import UserSave from "./UserSave";
+import UserInfo from "./UserInfo";
 
 export default function UserList() {
     const [users, setUsers] = useState([]);
     const [showCreateForm, setShowCreateForm] = useState(false);
+    const [chosenUserIdInfo, setchosenUserIdInfo] = useState(null);
 
     useEffect(() => {
         userService.getUsers()
@@ -38,6 +40,14 @@ export default function UserList() {
         setShowCreateForm(false);
     }
 
+    const showUserInfoHandler = (userId) => {
+        setchosenUserIdInfo(userId);
+    }
+
+    const hideUserInfoHandler = () => {
+        setchosenUserIdInfo(null);
+    }
+
     return (
         <>
             <Search />
@@ -48,17 +58,22 @@ export default function UserList() {
             />
             }
 
+            {chosenUserIdInfo && <UserInfo
+                userId={chosenUserIdInfo}
+                onInfoClose={hideUserInfoHandler}
+            />}
+
 
             {/* <!-- Table component --> */}
             <div className="table-wrapper">
                 {/* <!-- Overlap components  --> */}
 
-                <div className="loading-shade" >
-                    {/* <!-- Loading spinner  --> */}
-                    {/* <div className="spinner"></div>  */}
+                {/* <div className="loading-shade" > */}
+                {/* <!-- Loading spinner  --> */}
+                {/* <div className="spinner"></div>  */}
 
-                    {/* <-- No users added yet  --!>*/}
-                    {/* 
+                {/* <-- No users added yet  --!>*/}
+                {/* 
                                 <div className="table-overlap">
                                     <svg
                                     aria-hidden="true"
@@ -78,9 +93,9 @@ export default function UserList() {
                                     <h2>There is no users yet.</h2>
                                     </div> */}
 
-                    {/* <!-- No content overlap component  --> */}
+                {/* <!-- No content overlap component  --> */}
 
-                    {/* <div className="table-overlap">
+                {/* <div className="table-overlap">
                                     <svg
                                     aria-hidden="true"
                                     focusable="false"
@@ -99,9 +114,9 @@ export default function UserList() {
                                             <h2>Sorry, we couldn't find what you're looking for.</h2>
                                             </div> */}
 
-                    {/* <!-- On error overlap component  --> */}
+                {/* <!-- On error overlap component  --> */}
 
-                    {/* <div className="table-overlap">
+                {/* <div className="table-overlap">
                                     <svg
                                     aria-hidden="true"
                                     focusable="false"
@@ -119,7 +134,7 @@ export default function UserList() {
                                         </svg>
                                         <h2>Failed to fetch</h2>
                                         </div>  */}
-                </div>
+                {/* </div> */}
 
                 <table className="table">
                     <thead>
@@ -177,7 +192,12 @@ export default function UserList() {
                         </tr>
                     </thead>
                     <tbody>
-                        {users.map(user => <UserListItem key={user._id} {...user} />)}
+                        {users.map(user =>
+                            <UserListItem
+                                key={user._id}
+                                onInfoClick={showUserInfoHandler}
+                                {...user}
+                            />)}
 
                     </tbody>
                 </table>

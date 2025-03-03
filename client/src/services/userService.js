@@ -2,7 +2,8 @@ const baseUrl = `http://localhost:3030/jsonstore/users`;
 
 const userService = {
     getUsers,
-    addUser
+    getSingleUser,
+    addUser,
 }
 
 async function getUsers() {
@@ -33,6 +34,7 @@ async function addUser(formValues) {
     };
 
     userData['createdAt'] = new Date();
+    userData['updatedAt'] = new Date();
 
     const response = await fetch(baseUrl, {
         method: 'POST',
@@ -47,6 +49,12 @@ async function addUser(formValues) {
     const result = await response.json();
 
     return result;
+}
+
+async function getSingleUser(userId) {
+    const response = await fetch(baseUrl + `/${userId}`);
+    const user = await response.json();
+    return user;
 }
 
 export default userService;
