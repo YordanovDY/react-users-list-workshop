@@ -26,11 +26,27 @@ export default function UserList() {
         setShowCreateForm(false);
     }
 
+    const createUserHandler = async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(e.target);
+        const formValues = Object.fromEntries(formData);
+
+        const newUser = await userService.addUser(formValues);
+
+        setUsers(state => [...state, newUser]);
+        setShowCreateForm(false);
+    }
+
     return (
         <>
             <Search />
 
-            {showCreateForm && <UserSave onClose={hideAddUserFormHandler} />}
+            {showCreateForm && <UserSave
+                onClose={hideAddUserFormHandler}
+                onSave={createUserHandler}
+            />
+            }
 
 
             {/* <!-- Table component --> */}
