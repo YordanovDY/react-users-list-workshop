@@ -14,6 +14,7 @@ import NotFoundUsers from "./NotFoundUsers";
 
 export default function UserList() {
     const [isLoading, setIsLoading] = useState(true);
+    const [allUsers, setAllUsers] = useState([]);
     const [users, setUsers] = useState([]);
     const [showCreateForm, setShowCreateForm] = useState(false);
     const [chosenUserIdInfo, setchosenUserIdInfo] = useState(null);
@@ -90,7 +91,7 @@ export default function UserList() {
             return;
         }
 
-        setUsers(usersState => usersState.filter(user => compareOnSearch(user[criteria], search)));
+        setUsers(usersState => allUsers.filter(user => compareOnSearch(user[criteria], search)));
     }
 
     const clearSearchResults = () => {
@@ -102,6 +103,7 @@ export default function UserList() {
         userService.getUsers()
             .then(result => {
                 setUsers(result);
+                setAllUsers(result);
                 setIsLoading(false);
             })
     }
