@@ -1,9 +1,17 @@
 import { useEffect, useState } from "react";
 import userService from "../services/userService";
+import { getFormData } from "../utils/formDataUtil";
 
 export default function UserSave({ onClose, onSave, userId, onEdit }) {
-
-    const formSubmitHandler = userId ? onEdit : onSave;
+    const onEditHandler = (e) => {
+        e.preventDefault();
+        const formValues = getFormData(e);
+        formValues['_id'] = user['_id'];
+        formValues['createdAt'] = user['createdAt'];
+        onEdit(formValues);
+    }
+    
+    const formSubmitHandler = userId ? onEditHandler : onSave;
     const formLabel = userId ? 'Edit' : 'Add';
     const [user, setUser] = useState({});
 

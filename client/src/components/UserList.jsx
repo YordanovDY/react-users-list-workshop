@@ -8,6 +8,7 @@ import UserListItem from "./UserListItem";
 import UserSave from "./UserSave";
 import UserInfo from "./UserInfo";
 import UserDelete from "./UserDelete";
+import { getFormData } from "../utils/formDataUtil";
 
 export default function UserList() {
     const [users, setUsers] = useState([]);
@@ -35,8 +36,7 @@ export default function UserList() {
     const createUserHandler = async (e) => {
         e.preventDefault();
 
-        const formData = new FormData(e.target);
-        const formValues = Object.fromEntries(formData);
+        const formValues = getFormData(e);
 
         const newUser = await userService.addUser(formValues);
 
@@ -70,15 +70,11 @@ export default function UserList() {
         setChosenUserIdEditing(userId);
     }
 
-    const editUserHandler = async (e) => {
-        e.preventDefault();
-        const userId = chosenUserIdEditing
-
-        const formData = new FormData(e.target);
-        const formValues = Object.fromEntries(formData);
+    const editUserHandler = async (userData) => {
+        const userId = userData['_id'];
 
         // Update user on server
-        const updatedUser = await userService.updateUser(userId, formValues);
+        const updatedUser = await userService.updateUser(userId, userData);
         // Update local state
         setUsers(users => users.map(user => user._id === userId ? updatedUser : user));
         // Close modal
