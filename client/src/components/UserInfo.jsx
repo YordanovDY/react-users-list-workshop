@@ -33,7 +33,7 @@ export default function UserInfo({
                     </header>
                     <div className="content">
                         <div className="image-container">
-                            <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png" alt=""
+                            <img src={user.imageUrl} alt={user.firstName}
                                 className="image" />
                         </div>
                         <div className="user-details">
