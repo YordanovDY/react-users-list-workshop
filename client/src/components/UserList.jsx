@@ -29,6 +29,7 @@ export default function UserList() {
 
     const hideAddUserFormHandler = () => {
         setShowCreateForm(false);
+        setChosenUserIdEditing(null);
     }
 
     const createUserHandler = async (e) => {
@@ -69,8 +70,19 @@ export default function UserList() {
         setChosenUserIdEditing(userId);
     }
 
-    const hideEditFormHandler = () => {
-        setChosenUserIdEditing(null);
+    const editUserHandler = async (e) => {
+        e.preventDefault();
+        const userId = chosenUserIdEditing
+
+        const formData = new FormData(e.target);
+        const formValues = Object.fromEntries(formData);
+
+        // Update user on server
+        const updatedUser = await userService.updateUser(userId, formValues);
+        // Update local state
+        setUsers(users => users.map(user => user._id === userId ? updatedUser : user));
+        // Close modal
+        hideAddUserFormHandler();
     }
 
     return (
@@ -94,8 +106,9 @@ export default function UserList() {
             />}
 
             {chosenUserIdEditing && <UserSave
-                onClose={hideEditFormHandler}
-                // onSave={}
+                userId={chosenUserIdEditing}
+                onClose={hideAddUserFormHandler}
+                onEdit={editUserHandler}
             />}
 
 
