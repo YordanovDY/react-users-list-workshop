@@ -73,6 +73,7 @@ function transformData(formValues, isUpdateRequest = false) {
         email,
         phoneNumber,
         imageUrl,
+        createdAt,
         ...address } = formValues;
 
     const userData = {
@@ -82,6 +83,7 @@ function transformData(formValues, isUpdateRequest = false) {
         email,
         phoneNumber,
         imageUrl,
+        createdAt,
         address
     };
 

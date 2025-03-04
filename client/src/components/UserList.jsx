@@ -73,11 +73,10 @@ export default function UserList() {
     const editUserHandler = async (userData) => {
         const userId = userData['_id'];
 
-        // Update user on server
         const updatedUser = await userService.updateUser(userId, userData);
-        // Update local state
+
         setUsers(users => users.map(user => user._id === userId ? updatedUser : user));
-        // Close modal
+
         hideAddUserFormHandler();
     }
 
