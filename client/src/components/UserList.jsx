@@ -14,6 +14,7 @@ export default function UserList() {
     const [showCreateForm, setShowCreateForm] = useState(false);
     const [chosenUserIdInfo, setchosenUserIdInfo] = useState(null);
     const [chosenUserIdDeletion, setchosenUserIdDeletion] = useState(null);
+    const [chosenUserIdEditing, setChosenUserIdEditing] = useState(null);
 
     useEffect(() => {
         userService.getUsers()
@@ -64,6 +65,14 @@ export default function UserList() {
         setchosenUserIdDeletion(null);
     }
 
+    const showEditFormHandler = (userId) => {
+        setChosenUserIdEditing(userId);
+    }
+
+    const hideEditFormHandler = () => {
+        setChosenUserIdEditing(null);
+    }
+
     return (
         <>
             <Search />
@@ -82,6 +91,11 @@ export default function UserList() {
             {chosenUserIdDeletion && <UserDelete
                 onClose={hideDeleteModalHandler}
                 onDelete={deleteUserHandler}
+            />}
+
+            {chosenUserIdEditing && <UserSave
+                onClose={hideEditFormHandler}
+                // onSave={}
             />}
 
 
@@ -218,6 +232,7 @@ export default function UserList() {
                                 key={user._id}
                                 onInfoClick={showUserInfoHandler}
                                 onDeleteClick={showDeleteModalHandler}
+                                onEditClick={showEditFormHandler}
                                 {...user}
                             />)}
 
