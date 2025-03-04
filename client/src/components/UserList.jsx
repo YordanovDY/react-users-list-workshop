@@ -9,8 +9,10 @@ import UserSave from "./UserSave";
 import UserInfo from "./UserInfo";
 import UserDelete from "./UserDelete";
 import { getFormData } from "../utils/formDataUtil";
+import Spinner from "./Spinner";
 
 export default function UserList() {
+    const [isLoading, setIsLoading] = useState(true);
     const [users, setUsers] = useState([]);
     const [showCreateForm, setShowCreateForm] = useState(false);
     const [chosenUserIdInfo, setchosenUserIdInfo] = useState(null);
@@ -21,6 +23,7 @@ export default function UserList() {
         userService.getUsers()
             .then(result => {
                 setUsers(result);
+                setIsLoading(false);
             })
     }, []);
 
@@ -37,7 +40,6 @@ export default function UserList() {
         e.preventDefault();
 
         const formValues = getFormData(e);
-
         const newUser = await userService.addUser(formValues);
 
         setUsers(state => [...state, newUser]);
@@ -61,9 +63,11 @@ export default function UserList() {
     }
 
     const deleteUserHandler = async () => {
+        setIsLoading(true);
         await userService.deleteUser(chosenUserIdDeletion);
         setUsers(users => users.filter(user => user._id !== chosenUserIdDeletion));
         setchosenUserIdDeletion(null);
+        setIsLoading(false);
     }
 
     const showEditFormHandler = (userId) => {
@@ -72,7 +76,6 @@ export default function UserList() {
 
     const editUserHandler = async (userData) => {
         const userId = userData['_id'];
-
         const updatedUser = await userService.updateUser(userId, userData);
 
         setUsers(users => users.map(user => user._id === userId ? updatedUser : user));
@@ -110,10 +113,7 @@ export default function UserList() {
             {/* <!-- Table component --> */}
             <div className="table-wrapper">
                 {/* <!-- Overlap components  --> */}
-
-                {/* <div className="loading-shade" > */}
-                {/* <!-- Loading spinner  --> */}
-                {/* <div className="spinner"></div>  */}
+                {isLoading && <Spinner />}
 
                 {/* <-- No users added yet  --!>*/}
                 {/* 
