@@ -1,31 +1,13 @@
 import { useState } from "react"
 
-export default function Pagination({ pagesCount = 1 }) {
-    const [currentPage, setCurrentPage] = useState(1);
-
-    const nextPageHandler = () => {
-        if (currentPage >= pagesCount) {
-            return;
-        }
-
-        setCurrentPage(state => state + 1);
-    }
-
-    const previousPageHandler = () => {
-        if (currentPage <= 1) {
-            return;
-        }
-
-        setCurrentPage(state => state - 1);
-    }
-
-    const firstPageHandler = () => {
-        setCurrentPage(1);
-    }
-
-    const lastPageHandler = () => {
-        setCurrentPage(pagesCount);
-    }
+export default function Pagination({
+    pagesCount = 1,
+    currentPage = 1,
+    nextPageHandler,
+    previousPageHandler,
+    firstPageHandler,
+    lastPageHandler
+}) {
 
     return (
         <div className="pagination position">

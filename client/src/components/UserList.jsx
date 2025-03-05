@@ -21,9 +21,18 @@ export default function UserList() {
     const [chosenUserIdDeletion, setchosenUserIdDeletion] = useState(null);
     const [chosenUserIdEditing, setChosenUserIdEditing] = useState(null);
 
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pagesCount, setPagesCount] = useState(1);
+
     useEffect(() => {
-        extractUsers()
+        extractUsers();
     }, []);
+
+    useEffect(() => {
+        const start = (currentPage * 5) - 5;
+        const end = currentPage * 5;
+        setUsers(allUsers.slice(start, end));
+    }, [currentPage]);
 
     const showAddUserFormHandler = () => {
         setShowCreateForm(true);
@@ -81,6 +90,37 @@ export default function UserList() {
         hideAddUserFormHandler();
     }
 
+    const nextPageHandler = () => {
+        if (currentPage >= pagesCount) {
+            return;
+        }
+
+        setCurrentPage(state => state + 1);
+    }
+
+    const previousPageHandler = () => {
+        if (currentPage <= 1) {
+            return;
+        }
+
+        setCurrentPage(state => state - 1);
+    }
+
+    const firstPageHandler = () => {
+        setCurrentPage(1);
+    }
+
+    const lastPageHandler = () => {
+        setCurrentPage(pagesCount);
+    }
+
+    const paginatorHandlers = {
+        nextPageHandler,
+        previousPageHandler,
+        firstPageHandler,
+        lastPageHandler
+    }
+
     const searchHandler = (e) => {
         e.preventDefault();
 
@@ -99,11 +139,15 @@ export default function UserList() {
         extractUsers();
     }
 
+    // TODO: Fix bug on refresh
     function extractUsers() {
         userService.getUsers()
             .then(result => {
-                setUsers(result);
                 setAllUsers(result);
+                setPagesCount(Math.ceil(allUsers.length / 5));
+                const start = (currentPage * 5) - 5;
+                const end = currentPage * 5;
+                setUsers(allUsers.slice(start, end));
                 setIsLoading(false);
             })
     }
@@ -269,7 +313,7 @@ export default function UserList() {
             {/* <!-- New user button  --> */}
             < button onClick={showAddUserFormHandler} className="btn-add btn" > Add new user</button >
 
-            <Pagination />
+            <Pagination pagesCount={pagesCount} currentPage={currentPage} {...paginatorHandlers} />
         </>
     )
 }
